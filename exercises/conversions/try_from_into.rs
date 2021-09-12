@@ -11,8 +11,6 @@ struct Color {
     blue: u8,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
 // You need create implementation for a tuple of three integer,
@@ -26,6 +24,10 @@ struct Color {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = String;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let r = u8::try_from(tuple.0).expect("Could not convert red value");
+        let g = u8::try_from(tuple.1).expect("Could not convert green value");
+        let b = u8::try_from(tuple.2).expect("Could not convert blue value");
+        Ok(Color{red: r, green: g, blue: b})
     }
 }
 
@@ -33,6 +35,10 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = String;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let r = u8::try_from(arr[0]).expect("Could not convert red value");
+        let g = u8::try_from(arr[1]).expect("Could not convert green value");
+        let b = u8::try_from(arr[2]).expect("Could not convert blue value");
+        Ok(Color{red: r, green: g, blue: b})
     }
 }
 
@@ -40,6 +46,19 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = String;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            return Err("Slice length different than 3".to_string());
+        }
+
+        if let [r, g, b] = slice {
+            return Ok(Color {
+                red : u8::try_from(*r).expect("Could not convert red value"),
+                green : u8::try_from(*g).expect("Could not convert green value"),
+                blue : u8::try_from(*b).expect("Could not convert blue value"),
+            });
+        }
+
+        Err("Error in conversion".to_string())
     }
 }
 
